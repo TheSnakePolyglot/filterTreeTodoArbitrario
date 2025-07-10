@@ -17,7 +17,8 @@ class ABBenPy:
             self.value = valor
         else:
             if left:
-                self.izq = ABBenPy().insertar(valor, True)
+                self.izq = ABBenPy().insertar(valor, True) 
+                # En este punto no importa si le paso True o False a "left", porque siempre va a ser vacio ese arbol asi que nunca checkea la variable "left"
             else:
                 self.der = ABBenPy().insertar(valor, True)
         
