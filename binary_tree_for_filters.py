@@ -4,17 +4,22 @@ import typing
 
 class ABBenPy:
     
-    def __init__(self, value: str):
-        self.value: str = value
+    def __init__(self):
+        self.value: str = ""
         self.izq: typing.Optional[ABBenPy] = None
         self.der: typing.Optional[ABBenPy] = None
     
+    def esVacio(self) -> bool:
+        return self.value == ""
     
     def insertar(self, valor: str, left: bool):
-        if left:
-            self.izq = ABBenPy(valor)
+        if self.esVacio():
+            self.value = valor
         else:
-            self.der = ABBenPy(valor)
+            if left:
+                self.izq = ABBenPy().insertar(valor, True)
+            else:
+                self.der = ABBenPy().insertar(valor, True)
         
     
     def imprimir_arbol_binario(self, lvl: int):
@@ -25,7 +30,7 @@ class ABBenPy:
             self.der.imprimir_arbol_binario(lvl + 1)
     
     
-def generate_ABB_from_filter_string(filter_string_split: list[str]) -> ABBenPy:
+def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_ahora: ABBenPy) -> ABBenPy:
     """ 
     This function parses strings like ( ( ( Prop < 15 ) AND Booly ) OR ( Num == 5 ) ) AND ( OtherBool OR ( realy > 0 ) ) that have already been .split()
     """
@@ -49,14 +54,14 @@ def generate_ABB_from_filter_string(filter_string_split: list[str]) -> ABBenPy:
 
 
 if __name__ == "__main__":
-    miArbol = ABBenPy("2")
-    miArbol.insertar("je", True)
-    miArbol.insertar("what", False)
+    # miArbol = ABBenPy("2")
+    # miArbol.insertar("je", True)
+    # miArbol.insertar("what", False)
     
-    nuevoarbol = ABBenPy("no")
-    otroarbolito = ABBenPy("der")
+    # nuevoarbol = ABBenPy("no")
+    # otroarbolito = ABBenPy("der")
     
-    nuevoarbol.insertar(miArbol, True)
+    # nuevoarbol.insertar(miArbol, True)
     
     
-    miArbol.imprimir_arbol_binario(0)
+    # miArbol.imprimir_arbol_binario(0)
