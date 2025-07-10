@@ -17,10 +17,12 @@ class ABBenPy:
             self.value = valor
         else:
             if left:
-                self.izq = ABBenPy().insertar(valor, True) 
+                self.izq = ABBenPy()
+                self.izq.insertar(valor, True) 
                 # En este punto no importa si le paso True o False a "left", porque siempre va a ser vacio ese arbol asi que nunca checkea la variable "left"
             else:
-                self.der = ABBenPy().insertar(valor, True)
+                self.der = ABBenPy()
+                self.der.insertar(valor, True)
         
     
     def imprimir_arbol_binario(self, lvl: int):
@@ -48,16 +50,17 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         
         i += 1
     
+    # TODO: Ver que onda con los punteros aca, como puedo agregarle al arbol y al mismo tiempo pasar un nuevo arbol
     
-    
-    return ABBenPy("")
+    return 
     
 
 
 if __name__ == "__main__":
-    # miArbol = ABBenPy("2")
-    # miArbol.insertar("je", True)
-    # miArbol.insertar("what", False)
+    miArbol = ABBenPy()
+    miArbol.insertar("1", True)
+    miArbol.insertar("je", True)
+    miArbol.insertar("what", False)
     
     # nuevoarbol = ABBenPy("no")
     # otroarbolito = ABBenPy("der")
@@ -65,4 +68,5 @@ if __name__ == "__main__":
     # nuevoarbol.insertar(miArbol, True)
     
     
-    # miArbol.imprimir_arbol_binario(0)
+    miArbol.imprimir_arbol_binario(0)
+    
