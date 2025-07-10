@@ -6,8 +6,8 @@ class ABBenPy:
     
     def __init__(self, value: str):
         self.value: str = value
-        self.izq: typing.Optional[typing.Self] = None
-        self.der: typing.Optional[typing.Self] = None
+        self.izq: typing.Optional[ABBenPy] = None
+        self.der: typing.Optional[ABBenPy] = None
     
     
     def insertar(self, valor: str, left: bool):
