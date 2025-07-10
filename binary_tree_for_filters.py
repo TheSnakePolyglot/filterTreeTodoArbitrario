@@ -17,6 +17,13 @@ class ABBenPy:
             self.der = ABBenPy(valor)
         
     
+    def imprimir_arbol_binario(self, lvl: int):
+        print(" " * lvl, self.value)
+        if self.izq != None:
+            self.izq.imprimir_arbol_binario(lvl + 1)
+        elif self.der != None:
+            self.der.imprimir_arbol_binario(lvl + 1)
+    
     
 def generate_ABB_from_filter_string(filter_string_split: list[str]) -> ABBenPy:
     """ 
