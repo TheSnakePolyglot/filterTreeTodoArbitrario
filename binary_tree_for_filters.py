@@ -21,7 +21,7 @@ class ABBenPy:
         print(" " * lvl, self.value)
         if self.izq != None:
             self.izq.imprimir_arbol_binario(lvl + 1)
-        elif self.der != None:
+        if self.der != None:
             self.der.imprimir_arbol_binario(lvl + 1)
     
     
@@ -44,4 +44,19 @@ def generate_ABB_from_filter_string(filter_string_split: list[str]) -> ABBenPy:
     
     
     
-        
+    return ABBenPy("")
+    
+
+
+if __name__ == "__main__":
+    miArbol = ABBenPy("2")
+    miArbol.insertar("je", True)
+    miArbol.insertar("what", False)
+    
+    nuevoarbol = ABBenPy("no")
+    otroarbolito = ABBenPy("der")
+    
+    nuevoarbol.insertar(miArbol, True)
+    
+    
+    miArbol.imprimir_arbol_binario(0)
