@@ -65,26 +65,23 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         arbol_hasta_ahora.insertar(filter_string_split[0])
 
 
-def mapStringOperatorToFunction(binaryOperator: str) -> typing.Callable:
-    def toReturn(x, y):
-        match binaryOperator:
-            case ">":
-                return x > y,
-            case "<":
-                return x < y,
-            case "==":
-                return x == y,
-            case "AND": 
-                return x and y,
-            case "OR": 
-                return x or y
 
-     
-mapStringOperatorToFunction = {
+def mapStringOperatorToFunction(x: typing.Union[float, bool], y: typing.Union[float, bool], binaryOperator: str) -> bool:
+    match binaryOperator:
+        case ">":
+            return x > y,
+        case "<":
+            return x < y,
+        case "==":
+            return x == y,
+        case "AND": 
+            return x and y,
+        case "OR": 
+            return x or y
 
-}
 
-    
+
+
 
 
 if __name__ == "__main__":
