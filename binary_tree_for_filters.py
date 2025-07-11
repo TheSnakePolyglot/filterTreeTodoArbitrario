@@ -40,8 +40,10 @@ class ABBenPy:
     
 def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_ahora: ABBenPy, deQueLado: bool):
     """ 
-    This function parses strings like ( ( ( Prop < 15 ) AND Booly ) OR ( Num == 5 ) ) AND ( OtherBool OR ( realy > 0 ) ) that have already been .split()
+    This function parses strings like ( ( ( ( Prop ) < ( 15 ) ) AND ( Booly ) ) OR ( ( Num ) == ( 5 ) ) ) AND ( ( OtherBool ) OR ( ( realy ) > ( 0 ) ) ) that have already been .split()
+    Easier example: ( ( This ) > ( 0 ) ) OR ( SomeBool )
     """
+
     if filter_string_split[0] == "(":
         count_paren: int = 1
         
@@ -72,18 +74,21 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         print(".....")
 
         generate_ABB_from_filter_string(filter_string_split[1: i-1], arbol_hasta_ahora.izq, True)
-        generate_ABB_from_filter_string(filter_string_split[i+1: len(filter_string_split)], arbol_hasta_ahora.der, False)
+        generate_ABB_from_filter_string(filter_string_split[i+2: len(filter_string_split) - 1], arbol_hasta_ahora.der, False)
 
     else:
         print("FINAL")
         print(filter_string_split)
 
-        if len(filter_string_split) == 3:
-            arbol_hasta_ahora.insertar(filter_string_split[1], True)
-            arbol_hasta_ahora.izq.insertar(filter_string_split[0], True)
-            arbol_hasta_ahora.der.insertar(filter_string_split[2], True)
-        else:
-            arbol_hasta_ahora.insertar(filter_string_split[0], True)
+        # if len(filter_string_split) == 3:
+        #     arbol_hasta_ahora.insertar(filter_string_split[1], True)
+        #     arbol_hasta_ahora.izq.insertar(filter_string_split[0], True)
+        #     arbol_hasta_ahora.der.insertar(filter_string_split[2], True)
+        # else:
+        arbol_hasta_ahora.insertar(filter_string_split[0], True)
+        
+        print("listop")
+        print("------------")
     
 
 
@@ -103,7 +108,7 @@ if __name__ == "__main__":
 
 
     arbolGenerado = ABBenPy()
-    miFiltro = "( ( ( Prop < 15 ) AND Booly ) OR ( Num == 5 ) ) AND ( OtherBool OR ( realy > 0 ) )"
+    miFiltro = "( ( ( ( Prop ) < ( 15 ) ) AND ( Booly ) ) OR ( ( Num ) == ( 5 ) ) ) AND ( ( OtherBool ) OR ( ( realy ) > ( 0 ) ) )"
     generate_ABB_from_filter_string(miFiltro.split(), arbolGenerado, True)
 
     arbolGenerado.imprimir_arbol_binario(0)
