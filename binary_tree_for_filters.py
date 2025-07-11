@@ -59,6 +59,7 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         
 
         print(i)
+        print(filter_string_split[i])
         print("---")
 
 
@@ -66,8 +67,8 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         
         arbol_hasta_ahora.insertar(filter_string_split[i], deQueLado)
 
-        generate_ABB_from_filter_string(filter_string_split[1: i], arbol_hasta_ahora.izq, True)
-        generate_ABB_from_filter_string(filter_string_split[i: len(filter_string_split)], arbol_hasta_ahora.der, False)
+        generate_ABB_from_filter_string(filter_string_split[1: i-1], arbol_hasta_ahora.izq, True)
+        generate_ABB_from_filter_string(filter_string_split[i+1: len(filter_string_split)], arbol_hasta_ahora.der, False)
     
     else:
         print("FINAL")
@@ -79,22 +80,23 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
 
 
 if __name__ == "__main__":
-    miArbol = ABBenPy()
-    miArbol.insertar("1", True)
-    miArbol.insertar("je", True)
-    miArbol.insertar("what", False)
+    # miArbol = ABBenPy()
+    # miArbol.insertar("1", True)
+    # miArbol.insertar("je", True)
+    # miArbol.insertar("what", False)
     
-    miArbol.izq.insertar("yea", True)
-    # nuevoarbol = ABBenPy("no")
-    # otroarbolito = ABBenPy("der")
+    # miArbol.izq.insertar("yea", True)
+    # # nuevoarbol = ABBenPy("no")
+    # # otroarbolito = ABBenPy("der")
     
-    # nuevoarbol.insertar(miArbol, True)
+    # # nuevoarbol.insertar(miArbol, True)
     
-    miArbol.imprimir_arbol_binario(0)
+    # miArbol.imprimir_arbol_binario(0)
 
 
     arbolGenerado = ABBenPy()
     miFiltro = "( ( ( Prop < 15 ) AND Booly ) OR ( Num == 5 ) ) AND ( OtherBool OR ( realy > 0 ) )"
     generate_ABB_from_filter_string(miFiltro.split(), arbolGenerado, True)
+    
     arbolGenerado.imprimir_arbol_binario(0)
     
