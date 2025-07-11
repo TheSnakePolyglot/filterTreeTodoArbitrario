@@ -57,6 +57,8 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         
         arbol_hasta_ahora.insertar(filter_string_split[i])
 
+
+        # On each list slice, I remove the binary operator that was inserted to the tree and also 1 set of parentheses
         generate_ABB_from_filter_string(filter_string_split[1: i-1], arbol_hasta_ahora.izq)
         generate_ABB_from_filter_string(filter_string_split[i+2: len(filter_string_split) - 1], arbol_hasta_ahora.der)
 
