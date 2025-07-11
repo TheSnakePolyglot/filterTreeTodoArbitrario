@@ -67,13 +67,18 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
 
 
 
-ACCEPTED_OPERATORS = [">", "<", "==", "AND", "OR"]
+ACCEPTED_OPERATORS_BOOLS = ["AND", "OR"]
+ACCEPTED_OPERATORS_REALS = [">", "<", "=="]
+ALL_OPERATORS = ACCEPTED_OPERATORS_REALS.append(*ACCEPTED_OPERATORS_BOOLS)
 
-def is_accepted_operator(aStr: str) ->  bool:
-    return aStr in ACCEPTED_OPERATORS
+def is_bool_operator(aStr: str) ->  bool:
+    return aStr in ACCEPTED_OPERATORS_BOOLS
+
+def is_real_operator(aStr: str) ->  bool:
+    return aStr in ACCEPTED_OPERATORS_REALS
 
 def mapStringOperatorToFunction(x: typing.Union[float, bool], y: typing.Union[float, bool], binaryOperator: str) -> bool:
-    if is_accepted_operator(binaryOperator):
+    if is_bool_operator(binaryOperator) or is_real_operator(binaryOperator):
         match binaryOperator:
             case ">":
                 return x > y,
@@ -86,7 +91,7 @@ def mapStringOperatorToFunction(x: typing.Union[float, bool], y: typing.Union[fl
             case "OR": 
                 return x or y
     else:
-        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + ACCEPTED_OPERATORS)
+        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + ALL_OPERATORS)
 
 
 def is_float(aStr: str) -> bool:
@@ -96,6 +101,11 @@ def is_float(aStr: str) -> bool:
     except ValueError:
         return False
 
+
+
+def evaluateMathExpression(valuesForVariables: dict[str, float], arbol_de_filtro: ABBenPy) -> bool:
+    return True
+
 def evaluateBinaryFilterTree(valuesForVariables: dict[str: typing.Union[float, bool]], arbol_de_filtro: ABBenPy) -> bool:
     # PRE: ABBenPy no es vacio
 
@@ -104,11 +114,17 @@ def evaluateBinaryFilterTree(valuesForVariables: dict[str: typing.Union[float, b
     
     else:
         # Deal with Constants and Variables
-        # The only Constants accepted are floats    
+        # The only Constants accepted are floats and bools 
         
         # The only place where non bool elements can appear is on leafs. Despues todo lo otro son bools, y por lo tanto solo AND u OR
         # Los operadores de las leafs pueden incluir los demas tmb (>, <, ==)
 
+        # ---
+        if is_real_operator(arbol_de_filtro.value):
+            return evaluateMathExpression(valuesForVariables, arbol_de_filtro)
+        
+        elif is_bool_operator(arbol_de_filtro.value):
+            return True
     
 
 
