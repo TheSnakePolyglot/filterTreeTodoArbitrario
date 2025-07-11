@@ -66,20 +66,50 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
 
 
 
+
+ACCEPTED_OPERATORS = [">", "<", "==", "AND", "OR"]
+
+def is_accepted_operator(aStr: str) ->  bool:
+    return aStr in ACCEPTED_OPERATORS
+
 def mapStringOperatorToFunction(x: typing.Union[float, bool], y: typing.Union[float, bool], binaryOperator: str) -> bool:
-    match binaryOperator:
-        case ">":
-            return x > y,
-        case "<":
-            return x < y,
-        case "==":
-            return x == y,
-        case "AND": 
-            return x and y,
-        case "OR": 
-            return x or y
+    if is_accepted_operator(binaryOperator):
+        match binaryOperator:
+            case ">":
+                return x > y,
+            case "<":
+                return x < y,
+            case "==":
+                return x == y,
+            case "AND": 
+                return x and y,
+            case "OR": 
+                return x or y
+    else:
+        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + ACCEPTED_OPERATORS)
 
 
+def is_float(aStr: str) -> bool:
+    try:
+        float(aStr)
+        return True
+    except ValueError:
+        return False
+
+def evaluateBinaryFilterTree(valuesForVariables: dict[str: typing.Union[float, bool]], arbol_de_filtro: ABBenPy) -> bool:
+    # PRE: ABBenPy no es vacio
+
+    if (arbol_de_filtro.esVacio):
+        return True
+    
+    else:
+        # Deal with Constants and Variables
+        # The only Constants accepted are floats    
+        
+        # The only place where non bool elements can appear is on leafs. Despues todo lo otro son bools, y por lo tanto solo AND u OR
+        # Los operadores de las leafs pueden incluir los demas tmb (>, <, ==)
+
+    
 
 
 
