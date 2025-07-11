@@ -15,13 +15,15 @@ class ABBenPy:
     def insertar(self, valor: str, left: bool):
         if self.esVacio():
             self.value = valor
+            self.izq = ABBenPy()
+            self.der = ABBenPy()
         else:
             if left:
-                self.izq = ABBenPy()
+                # self.izq = ABBenPy()
                 self.izq.insertar(valor, True) 
                 # En este punto no importa si le paso True o False a "left", porque siempre va a ser vacio ese arbol asi que nunca checkea la variable "left"
             else:
-                self.der = ABBenPy()
+                # self.der = ABBenPy()
                 self.der.insertar(valor, True)
         
     
@@ -66,16 +68,22 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
         # TODO: Ver que onda con los punteros aca, como puedo agregarle al arbol y al mismo tiempo pasar un nuevo arbol
         
         arbol_hasta_ahora.insertar(filter_string_split[i], deQueLado)
+        print("ins")
+        print(".....")
 
         generate_ABB_from_filter_string(filter_string_split[1: i-1], arbol_hasta_ahora.izq, True)
         generate_ABB_from_filter_string(filter_string_split[i+1: len(filter_string_split)], arbol_hasta_ahora.der, False)
-    
+
     else:
         print("FINAL")
         print(filter_string_split)
-        arbol_hasta_ahora.insertar(filter_string_split[1], True)
-        arbol_hasta_ahora.izq.insertar(filter_string_split[0], True)
-        arbol_hasta_ahora.der.insertar(filter_string_split[2], True)
+
+        if len(filter_string_split) == 3:
+            arbol_hasta_ahora.insertar(filter_string_split[1], True)
+            arbol_hasta_ahora.izq.insertar(filter_string_split[0], True)
+            arbol_hasta_ahora.der.insertar(filter_string_split[2], True)
+        else:
+            arbol_hasta_ahora.insertar(filter_string_split[0], True)
     
 
 
@@ -97,6 +105,6 @@ if __name__ == "__main__":
     arbolGenerado = ABBenPy()
     miFiltro = "( ( ( Prop < 15 ) AND Booly ) OR ( Num == 5 ) ) AND ( OtherBool OR ( realy > 0 ) )"
     generate_ABB_from_filter_string(miFiltro.split(), arbolGenerado, True)
-    
+
     arbolGenerado.imprimir_arbol_binario(0)
     
