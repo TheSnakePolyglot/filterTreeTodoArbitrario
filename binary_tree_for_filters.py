@@ -20,7 +20,6 @@ class ABBenPy:
         else:
             raise ValueError("Cant insert to Tree that isnt empty")
 
-        
     
     def imprimir_arbol_binario(self, lvl: int):
         print(" " * lvl, self.value)
@@ -64,6 +63,16 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
 
     else:
         arbol_hasta_ahora.insertar(filter_string_split[0])
+
+
+
+mapStringOperatorToFunction = {
+    ">": lambda x, y: x > y,
+    "<": lambda x, y: x < y,
+    "==": lambda x, y: x == y,
+    "AND": lambda x, y: x and y,
+    "OR": lambda x, y: x or y
+}
 
     
 
