@@ -43,7 +43,11 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
     if filter_string_split[0] == "(":
         count_paren: int = 1
         
-        i: int = 0
+
+        print(filter_string_split)
+
+
+        i: int = 1
         while ((count_paren != 0) and (i < len(filter_string_split))):
             
             if (filter_string_split[i] == "("):
@@ -53,6 +57,11 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
             
             i += 1
         
+
+        print(i)
+        print("---")
+
+
         # TODO: Ver que onda con los punteros aca, como puedo agregarle al arbol y al mismo tiempo pasar un nuevo arbol
         
         arbol_hasta_ahora.insertar(filter_string_split[i], deQueLado)
