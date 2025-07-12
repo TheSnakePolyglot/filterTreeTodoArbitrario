@@ -67,44 +67,98 @@ def generate_ABB_from_filter_string(filter_string_split: list[str], arbol_hasta_
 
 
 
-ACCEPTED_OPERATORS_BOOLS = ["AND", "OR"]
-ACCEPTED_OPERATORS_REALS = [">", "<", "=="]
-ALL_OPERATORS = ACCEPTED_OPERATORS_REALS.append(*ACCEPTED_OPERATORS_BOOLS)
+OPERATORS_BOOL_BOOL = ["AND", "OR"]
+OPERATORS_REAL_BOOL = [">", "<", "=="]
+OPERATORS_REAL_REAL = ["+", "-", "*", "/"]
 
-def is_bool_operator(aStr: str) ->  bool:
-    return aStr in ACCEPTED_OPERATORS_BOOLS
+def is_bool_bool_operator(aStr: str) ->  bool:
+    return aStr in OPERATORS_BOOL_BOOL
+def is_real_bool_operator(aStr: str) ->  bool:
+    return aStr in OPERATORS_REAL_BOOL
+def is_real_real_operator(aStr: str) ->  bool:
+    return aStr in OPERATORS_REAL_REAL
 
-def is_real_operator(aStr: str) ->  bool:
-    return aStr in ACCEPTED_OPERATORS_REALS
-
-def mapStringOperatorToFunction(x: typing.Union[float, bool], y: typing.Union[float, bool], binaryOperator: str) -> bool:
-    if is_bool_operator(binaryOperator) or is_real_operator(binaryOperator):
+def mapStringOperatorToFunctionBoolBool(x: bool, y: bool, binaryOperator: str) -> bool:
+    if is_bool_bool_operator(binaryOperator):
         match binaryOperator:
             case ">":
-                return x > y,
+                return x > y
             case "<":
-                return x < y,
+                return x < y
             case "==":
-                return x == y,
+                return x == y
             case "AND": 
-                return x and y,
+                return x and y
             case "OR": 
                 return x or y
     else:
-        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + ALL_OPERATORS)
+        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + OPERATORS_BOOL_BOOL)
+    
+def mapStringOperatorToFunctionRealBool(x: float, y: float, binaryOperator: str) -> bool:
+    if is_real_bool_operator(binaryOperator):
+        match binaryOperator:
+            case ">":
+                return x > y
+            case "<":
+                return x < y
+            case "==":
+                return x == y
+    else:
+        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + OPERATORS_REAL_BOOL)
 
 
+def mapStringOperatorToFunctionRealReal(x: float, y: float, binaryOperator: str) -> float:
+    if is_real_real_operator(binaryOperator):
+        match binaryOperator:
+            case "+":
+                return x+y
+            case "-":
+                return x-y
+            case "*":
+                return x*y
+            case "/":
+                return x/y
+    else:
+        raise ValueError("Operator '" + binaryOperator + "' is not on the accepted list of binary operators: " + OPERATORS_REAL_REAL)
+    
 def is_float(aStr: str) -> bool:
     try:
         float(aStr)
         return True
     except ValueError:
         return False
+def is_bool(aStr: str) -> bool:
+    return aStr in ["True", "False"]
 
 
 
-def evaluateMathExpression(valuesForVariables: dict[str, float], arbol_de_filtro: ABBenPy) -> bool:
-    return True
+def evaluateMathExpression(valuesForVariables: dict[str, float], arbol_de_filtro: ABBenPy) -> float:
+    
+    if is_real_real_operator(arbol_de_filtro.value):
+        return mapStringOperatorToFunctionRealReal(
+            evaluateMathExpression(valuesForVariables, arbol_de_filtro.izq),
+            evaluateMathExpression(valuesForVariables, arbol_de_filtro.der),
+            arbol_de_filtro.value)
+    
+    elif is_float(arbol_de_filtro.value):
+        return float(arbol_de_filtro.value)
+    else:
+        # Es una variable
+        return valuesForVariables[arbol_de_filtro.value]
+
+def evaluateBoolExpression(valuesForVariables: dict[str, bool], arbol_de_filtro: ABBenPy) -> bool:
+
+    if is_bool_bool_operator(arbol_de_filtro.value):
+        return mapStringOperatorToFunctionBoolBool(
+            evaluateBoolExpression(valuesForVariables, arbol_de_filtro.izq),
+            evaluateBoolExpression(valuesForVariables, arbol_de_filtro.der),
+            arbol_de_filtro.value)
+    
+    elif is_bool(arbol_de_filtro.value):
+        return bool(arbol_de_filtro.value)
+    else:
+        # Es una variable
+        return valuesForVariables[arbol_de_filtro.value]
 
 def evaluateBinaryFilterTree(valuesForVariables: dict[str: typing.Union[float, bool]], arbol_de_filtro: ABBenPy) -> bool:
     # PRE: ABBenPy no es vacio
@@ -120,11 +174,15 @@ def evaluateBinaryFilterTree(valuesForVariables: dict[str: typing.Union[float, b
         # Los operadores de las leafs pueden incluir los demas tmb (>, <, ==)
 
         # ---
-        if is_real_operator(arbol_de_filtro.value):
-            return evaluateMathExpression(valuesForVariables, arbol_de_filtro)
+
+        if is_real_bool_operator(arbol_de_filtro.value):
+            numOnLeft: float = evaluateMathExpression(arbol_de_filtro.izq)
+            numOnRight: float = evaluateMathExpression(arbol_de_filtro.der)
+
+            return mapStringOperatorToFunctionRealBool(numOnLeft, numOnRight, arbol_de_filtro.value)
         
-        elif is_bool_operator(arbol_de_filtro.value):
-            return True
+        elif is_bool_bool_operator(arbol_de_filtro.value):
+            return evaluateBoolExpression(valuesForVariables, arbol_de_filtro)
     
 
 
@@ -137,4 +195,21 @@ if __name__ == "__main__":
     generate_ABB_from_filter_string(miFiltro.split(), arbolGenerado)
 
     arbolGenerado.imprimir_arbol_binario(0)
+
+    miExpMatematica = "( ( x ) + ( 1 ) ) - ( ( 2 ) * ( y ) )"
+    unArbolMat = ABBenPy()
+    generate_ABB_from_filter_string(miExpMatematica.split(), unArbolMat)
+    myvalsmat = {"x":4, "y":10}
+    print("CUANTO DA " + miExpMatematica + " con " + str(myvalsmat))
+    print(evaluateMathExpression(myvalsmat, unArbolMat))
+
+    miExpBool = "( booly ) AND ( ( someBooly ) OR ( otropo ) )"
+    misVarsBool = {"booly": False, "someBooly": False, "otropo": True}
+    miArbolBool = ABBenPy()
+    generate_ABB_from_filter_string(miExpBool.split(), miArbolBool)
+    print(evaluateBoolExpression(misVarsBool, miArbolBool))
+
+
+    misValoresTODO = {"Prop": 3, "Booly": False, "Num": 5, "OtherBool": False, "realy": -5}
+    print(evaluateBinaryFilterTree(misValoresTODO, arbolGenerado))
     
