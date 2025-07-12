@@ -210,6 +210,7 @@ if __name__ == "__main__":
     print(evaluateBoolExpression(misVarsBool, miArbolBool))
 
 
+    # TODO: ESTO DA MAL CREO. Da True pero deberia ser False me parece
     misValoresTODO = {"Prop": 3, "Booly": False, "Num": 5, "OtherBool": False, "realy": -5}
     print(evaluateBinaryFilterTree(misValoresTODO, arbolGenerado))
     
